@@ -3,7 +3,35 @@
 {% extends "layout.html" %}
 {% block title %} {{ title }} {% endblock %}
 {% block body %}
-    <!-- {{ super() }} -->
-    <h2>Resultado de la Busqueda.</h2>
-    <a href="/" class="btn btn-primary mt-5">Regresar</a>
+<!-- {{ super() }} -->
+<h2>Resultado de la Busqueda.</h2>
+<h4>Archivo: {{ filename }}</h4>
+
+<table class="table table-bordered mt-5" id="tabla-proximas-citas" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Algoritmo</th>
+            <th>Tiempo de ejecución</th>
+            <th>Recorrido</th>
+            <th>Encontrado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>A*</td>
+            <td>5.2s</td>
+            <td>A->B-C-D.</td>
+            <td>B</td>
+        </tr>
+        <tr>
+            <td>BFS</td>
+            <td>5.2s</td>
+            <td>A->B-C-D.</td>
+            <td>B</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<a href="/" class="btn btn-primary mt-5">Regresar</a>
 {% endblock %}
