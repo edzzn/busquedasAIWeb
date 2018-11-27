@@ -2,6 +2,7 @@ class Node:
     def __init__(self, name, value=0, parent=[], *children):
         self.name = name
         self.value = value
+        # self.peso = peso
         self.parents = parent[:]
         self.children = list(children)
         self.pesos = {}
@@ -20,9 +21,12 @@ class Node:
         self.parents.extend(parents)
 
     def addChildren(self, children, pesos=[]):
-        self.children.extend(children)
+        # self.children.extend(children)
 
         for i, child in enumerate(children):
+            if child not in self.children:
+                self.children.append(child)
+                
             if len(pesos) > i:
                 self.pesos[child] = pesos[i]
 

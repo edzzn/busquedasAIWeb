@@ -1,6 +1,7 @@
 import numpy as np
-from lib import DBConnection as DB
-from lib import Node as nd
+import DBConnection as DB
+import Node as nd
+import Search as Search
 
 class Graph:
     def __init__(self, nodes=[], edges=[]):
@@ -81,6 +82,16 @@ class Graph:
 
 if __name__ == "__main__":
     grafo = Graph()
-    grafo.read_file("..\\uploads\\199bf4f6a5444539a0fd2d852f8b042f-ex.txt")
+    grafo.read_file("..\\uploads\\d0de61ca5ba04c06b08bc01182b3e9af-ex.txt")
     print(grafo.nodes)
     print(grafo.edges)
+    search = Search.Search()
+
+    
+    init_node = grafo.get_node('a')
+    # print(init_node)
+    nodeVal= 'h'
+
+    path, found, stack = search.DFS(init_node, [nodeVal], False, 'ASC')
+    for row in stack:
+       print(row)

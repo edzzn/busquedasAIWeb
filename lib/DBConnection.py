@@ -1,5 +1,5 @@
 import psycopg2 
-import Node
+from lib import Node
 
 class Connection:
     def __init__(self):

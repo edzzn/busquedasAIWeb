@@ -7,28 +7,34 @@
 <h2>Resultado de la Busqueda.</h2>
 <h4>Archivo: {{ filename }}</h4>
 
+<img src="{{ filename }}.png">
+
 <table class="table table-bordered mt-5" id="tabla-proximas-citas" width="100%" cellspacing="0">
     <thead>
         <tr>
             <th>Algoritmo</th>
-            <th>Tiempo de ejecución</th>
-            <th>Recorrido</th>
-            <th>Encontrado</th>
+            <th>Camino</th>
+            <th>Stack</th>
+            <th>Encontado</th>
+            <th>Tiempo</th>
         </tr>
     </thead>
     <tbody>
+        
+        {% for algorithm in algorithm_results %}
         <tr>
-            <td>A*</td>
-            <td>5.2s</td>
-            <td>A->B-C-D.</td>
-            <td>B</td>
+                <td>{{ algorithm }}</td>
+                <td>{{ algorithm_results[algorithm][0] }}</td>
+                <td>
+                    {% for row in algorithm_results[algorithm][2] %}
+                        {{ row }}
+                        <br>
+                    {% endfor %}
+                </td>
+                <td>{{ algorithm_results[algorithm][1] }}</td>
+                <td>{{ algorithm_results[algorithm][3] }}</td>
         </tr>
-        <tr>
-            <td>BFS</td>
-            <td>5.2s</td>
-            <td>A->B-C-D.</td>
-            <td>B</td>
-        </tr>
+        {% endfor %}
     </tbody>
 </table>
 

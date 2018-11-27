@@ -1,5 +1,6 @@
 class Search:
     def DFS(self, Inode, nodeVal=[], showStack=False, sort='ASC'):
+        stack =  []
         queue = []
         visited = []
         found = []
@@ -7,10 +8,15 @@ class Search:
 
         queue.insert(0, Inode)
 
+        stack.extend([
+                f"Searching... {nodeVal} in {Inode.name}",
+                f"Queue \t\t Current",
+                f"{queue[0].name}"
+        ])
+
         if (showStack):
-            print(f"Searching... {nodeVal} in {Inode.name}")
-            print(f"Queue \t\t Current")
-            print(f"{queue[0].name}")
+            for row in stack:
+                print(row)
 
         while (len(queue) and (len(found) != len(nodeVal))):
             curNode = queue.pop(0)
@@ -30,16 +36,17 @@ class Search:
             if (curNode.name in nodeVal):
                 found.append(curNode.name)
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name} *")
+                    print(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name} *")
+                stack.append(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name} *")
             else:
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name}")
+                    print(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name}")
+                stack.append(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name}")
 
-        return (visited, found)
+        return (visited, found, stack)
 
     def BFS(self, Inode, nodeVal, showStack=False, sort='ASC'):
+        stack = []
         queue = []
         visited = []
         found = []
@@ -47,10 +54,15 @@ class Search:
 
         queue.append(Inode)
 
+        stack.extend([
+            f"Searching... {nodeVal} in {Inode.name}",
+            f"Queue \t\t Current",
+            f"{queue[0].name}"
+        ])
+
         if (showStack):
-            print(f"Searching... {nodeVal} in {Inode.name}")
-            print(f"Queue \t\t Current")
-            print(f"{queue[0].name}")
+            for row in stack:
+                print(row)
 
         while (len(queue) and (len(found) != len(nodeVal))):
 
@@ -70,30 +82,35 @@ class Search:
             if (curNode.name in nodeVal):
                 found.append(curNode.name)
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name} *")
+                    print(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name} *")
+                stack.append(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name} *")
             else:
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name}")
+                    print(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name}")
+                stack.append(f"{list(map(lambda node: node.name, queue))} \t\t {curNode.name}")
 
-        return (visited, found)
+        return (visited, found, stack)
 
     # Iterative Depth Search
     def IDS(self, Inode, nodeVal, maxLevel=3, showStack=False, sort='ASC'):
 
+        stack = []
         visited = []
         found = []
         curNode = None
         curLevel = 0
         isDone = False
 
+        stack.extend([
+            f"Searching... {nodeVal} in {Inode.name}",
+            f"Level {curLevel}",
+            f"Queue \t\t Current",
+            f"{Inode.name}"
+        ])
+
         if (showStack):
-            print(showStack)
-            print(f"Searching... {nodeVal} in {Inode.name}")
-            print(f"Level {curLevel}")
-            print(f"Queue \t\t Current")
-            print(f"{Inode.name}")
+            for row in stack:
+                print(row)
 
         visited.append(Inode)
 
@@ -101,14 +118,15 @@ class Search:
             found.append(Inode.name)
             if (showStack):
                 print(f"[] \t\t {Inode.name} *")
+            stack.append(f"[] \t\t {Inode.name} *")
         else:
             if (showStack):
                 print(f"[] \t\t {Inode.name}")
+            stack.append(f"[] \t\t {Inode.name} *")
         if len(found) == len(nodeVal):
             return (visited, found)
         curLevel += 1
 
-        # print('\n\n')
         while curLevel <= maxLevel:
 
             queue = []
@@ -130,7 +148,14 @@ class Search:
             queue = visited[:]
             queue.extend(temp_a)
             # print(f"Queue: {queue}")
-
+            
+            stack.extend([
+                f"\nSearching... {nodeVal} in {Inode.name}",
+                f"Level {curLevel}",
+                f"Queue \t\t Current",
+                f"{list(map(lambda node: node.name, queue))}"
+            ])
+            
             if (showStack):
                 print(f"\nSearching... {nodeVal} in {Inode.name}")
                 print(f"Level {curLevel}")
@@ -146,29 +171,34 @@ class Search:
                 if (node.name in nodeVal):
                     found.append(node.name)
                     if (showStack):
-
-                        print(
-                            f"{list(map(lambda node: node.name, queue))} \t\t {node.name} *")
+                        print(f"{list(map(lambda node: node.name, queue))} \t\t {node.name} *")
+                    stack.append(f"{list(map(lambda node: node.name, queue))} \t\t {node.name} *")
                 else:
                     if (showStack):
                         # queue = list(set(queue) - set(iVisited))
-                        print(
-                            f"{list(map(lambda node: node.name, queue))} \t\t {node.name}")
+                        print(f"{list(map(lambda node: node.name, queue))} \t\t {node.name}")
+                    stack.append(f"{list(map(lambda node: node.name, queue))} \t\t {node.name}")
 
             curLevel += 1
-        return (visited, found)
+        return (visited, found, stack)
 
     # Uniform Cost Search
     def UCS(self, Inode, nodeVal, showStack=False, sort='ASC'):
+        stack = []
         queue_dict = {}
         visited = []
         found = []
 
         queue_dict[Inode] = 0
+        stack.extend([
+            f"Searching... {nodeVal} in {Inode.name}",
+            f"Queue \t\t Current",
+            f"{Inode.name}"
+        ])
+
         if (showStack):
-            print(f"Searching... {nodeVal} in {Inode.name}")
-            print(f"Queue \t\t Current")
-            print(f"{Inode.name}")
+            for row in stack:
+                print(row)
 
         while (len(queue_dict) and (len(found) != len(nodeVal))):
             curNode = max(queue_dict, key=queue_dict.get)  # 'min' or 'max'
@@ -178,41 +208,45 @@ class Search:
                 if child not in visited:
                     queue_dict[child] = curNode.pesos[child] + \
                         queue_dict[curNode]
-
+            print(f"{curNode.name}  ? {nodeVal} [{type(nodeVal)}] [{type(nodeVal[0])}]: {curNode.name in nodeVal}")
             if (curNode.name in nodeVal):
                 found.append(curNode.name)
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
             else:
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
 
             # Eliminamos al nodo del diccionario
             del queue_dict[curNode]
 
-        return (visited, found)
+        return (visited, found, stack)
 
     # Gradient Search
     def GS(self, Inode, showStack=False, sort='ASC'):
+        stack = []
         queue_dict = {}
         visited = []
         found = []
 
         queue_dict[Inode] = Inode.value
+
+        stack.extend([
+            f"Searching... in {Inode.name}",
+            f"Queue \t\t Current",
+            f"{Inode.name}"
+        ])
+
         if (showStack):
-            print(f"Searching... in {Inode.name}")
-            print(f"Queue \t\t Current")
-            print(f"{Inode.name}")
+            for row in stack:
+                print(row)    
 
         while len(queue_dict):
             curNode = min(queue_dict, key=queue_dict.get)  # 'min' or 'max'
             queue_dict = {}
-            # temp_dict = {}
-            # print(queue_dict)
             visited.append(curNode)
-            # print(f"curNode.children: {curNode.children}")
             for child in curNode.children:
                 if child not in visited:
                     queue_dict[child] = child.value
@@ -220,25 +254,32 @@ class Search:
             if (curNode.value == 0):
                 found.append(curNode.name)
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
             else:
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
 
-        return (visited, found)
+        return (visited, found, stack)
 
     def BestFS(self, Inode, showStack=False, sort='ASC'):
+        stack = []
         queue_dict = {}
         visited = []
         found = []
 
         queue_dict[Inode] = Inode.value
+
+        stack.extend([
+            f"Searching... in {Inode.name}",
+            f"Queue \t\t Current",
+            f"{Inode.name}"
+        ])
+
         if (showStack):
-            print(f"Searching... in {Inode.name}")
-            print(f"Queue \t\t Current")
-            print(f"{Inode.name}")
+            for row in stack:
+                print(row)
 
         while len(queue_dict):
             curNode = min(queue_dict, key=queue_dict.get)  # 'min' or 'max'
@@ -251,61 +292,35 @@ class Search:
             if (curNode.value == 0):
                 found.append(curNode.name)
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
             else:
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
 
             # Eliminamos al nodo del diccionario
             del queue_dict[curNode]
 
-        return (visited, found)
-
-        queue_dict = {}
-        visited = []
-        found = []
-
-        queue_dict[Inode] = Inode.value
-        if (showStack):
-            print(f"Searching... in {Inode.name}")
-            print(f"Queue \t\t Current")
-            print(f"{Inode.name}")
-
-        while len(queue_dict):
-            curNode = min(queue_dict, key=queue_dict.get)  # 'min' or 'max'
-            queue_dict = {}
-            # temp_dict = {}
-            # print(queue_dict)
-            visited.append(curNode)
-            # print(f"curNode.children: {curNode.children}")
-            for child in curNode.children:
-                if child not in visited:
-                    queue_dict[child] = child.value
-
-            if (curNode.value == 0):
-                found.append(curNode.name)
-                if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
-            else:
-                if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
-
-        return (visited, found)
+        return (visited, found, stack)
 
     def A(self, Inode, showStack=False, sort='ASC'):
+        stack = []
         queue_dict = {}
         visited = []
         found = []
 
         queue_dict[Inode] = Inode.value
+
+        stack.extend([
+            f"Searching... in {Inode.name}",
+            f"Queue \t\t Current",
+            f"{Inode.name}"
+        ])
+
         if (showStack):
-            print(f"Searching... in {Inode.name}")
-            print(f"Queue \t\t Current")
-            print(f"{Inode.name}")
+            for row in stack:
+                print(row)
 
         while len(queue_dict):
             curNode = min(queue_dict, key=queue_dict.get)  # 'min' or 'max'
@@ -319,17 +334,17 @@ class Search:
             if (curNode.value == 0):
                 found.append(curNode.name)
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
             else:
                 if (showStack):
-                    print(
-                        f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
 
             # Eliminamos al nodo del diccionario
             del queue_dict[curNode]
 
-        return (visited, found)
+        return (visited, found, stack)
 
     def sortDESC(self, a, b):
         if a.name > b.name:
@@ -352,30 +367,34 @@ class Search:
      # Bidireccionar
 
     def BDS(self, Inode, nodeVal, showStack=False, sort='ASC'):
+        stack = []
         queueTB = []
         queueBT = []
         visitedTB = []
         visitedBT = []
-        found = []
         curNodeTB = None
         curNodeBT = None
 
         queueTB.append(Inode)
         queueBT.append(nodeVal)
 
-        if (showStack):
-            print(f"Searching... {nodeVal} in {Inode.name}")
-            print(f"Queue Top-Botton \t\t Current")
-            print(f"{queueTB[0].name}")
-            print(f"Searching... {Inode.name} in {nodeVal.name}")
-            print(f"Queue Botton-TOP \t\t Current")
-            print(f"{queueBT[0].name}")
+        stack.extend([
+            f"Searching... {nodeVal} in {Inode.name}",
+            f"Queue Top-Bottom \t\t Current",
+            f"{queueTB[0].name}",
+            f"Searching... {Inode.name} in {nodeVal.name}",
+            f"Queue Bottom-TOP \t\t Current",
+            f"{queueBT[0].name}",
+            '\n'
+        ])
 
-            print('\n')
+        if (showStack):
+            for row in stack:
+                print(row)
 
         while len(queueTB) and len(queueBT):
 
-            # Top-Botton
+            # Top-Bottom
             curNodeTB = queueTB.pop(-1)
 
             visitedTB.append(curNodeTB)
@@ -389,7 +408,7 @@ class Search:
                 if child not in visitedTB:
                     queueTB.insert(0, child)
 
-            # Botton-Top
+            # Bottom-Top
             curNodeBT = queueBT.pop(-1)
 
             visitedBT.insert(0, curNodeBT)
@@ -404,24 +423,55 @@ class Search:
                     queueBT.insert(0, child)
 
             # Compare
-            if (showStack):
-                print(f"Queue Top-Botton \t\t Current")
-                if not set(queueBT).isdisjoint(queueTB):
-                    print(
-                        f"{list(map(lambda node: node.name, queueTB))}** \t\t {curNodeTB.name}")
-                else:
-                    print(
-                        f"{list(map(lambda node: node.name, queueTB))} \t\t {curNodeTB.name}")
+            stack.append(f"Queue Top-Bottom \t\t Current")
+            if not set(queueBT).isdisjoint(queueTB):
+                stack.append(f"{list(map(lambda node: node.name, queueTB))}** \t\t {curNodeTB.name}")
+            else:
+                stack.append(f"{list(map(lambda node: node.name, queueTB))} \t\t {curNodeTB.name}")
 
-                print(f"Queue Botton-Top \t\t Current")
+            stack.append(f"Queue Bottom-Top \t\t Current")
+            if not set(queueBT).isdisjoint(queueTB):
+                stack.append(f"{list(map(lambda node: node.name, queueBT))}** \t\t {curNodeBT.name}")
+            else:
+                stack.append(f"{list(map(lambda node: node.name, queueBT))} \t\t {curNodeBT.name}")
+
+
+            if (showStack):
+                print(f"Queue Top-Bottom \t\t Current")
                 if not set(queueBT).isdisjoint(queueTB):
-                    print(
-                        f"{list(map(lambda node: node.name, queueBT))}** \t\t {curNodeBT.name}")
+                    print(f"{list(map(lambda node: node.name, queueTB))}** \t\t {curNodeTB.name}")
                 else:
-                    print(
-                        f"{list(map(lambda node: node.name, queueBT))} \t\t {curNodeBT.name}")
+                    print(f"{list(map(lambda node: node.name, queueTB))} \t\t {curNodeTB.name}")
+
+                print(f"Queue Bottom-Top \t\t Current")
+                if not set(queueBT).isdisjoint(queueTB):
+                    print(f"{list(map(lambda node: node.name, queueBT))}** \t\t {curNodeBT.name}")
+                else:
+                    print(f"{list(map(lambda node: node.name, queueBT))} \t\t {curNodeBT.name}")
 
             if not set(queueBT).isdisjoint(queueTB):
-                return ((visitedTB, visitedBT), [nodeVal.name])
+                return ((visitedTB, visitedBT), [nodeVal.name], stack)
 
-        return ((visitedTB, visitedBT), ['s'])
+        return ((visitedTB, visitedBT), [None], stack)
+
+
+if __name__ == '__main__':
+    import Node as Node
+    t = Node.Node("T", 20)
+    n0 = Node.Node("n0", 14)
+    n1 = Node.Node("n1", 13)
+    n2 = Node.Node("n2", 12)
+    n3 = Node.Node("n3", 11)
+    n4 = Node.Node("n4", 0)
+    n5 = Node.Node("n5", 17)
+    n6 = Node.Node("n6", 10)
+
+
+    t.addChildren([n0, n1, n2], [3, 2, 5])
+    n2.addChildren([n3, n6], [7, 5])
+    n3.addChildren([n4, n5], [2, 4])
+
+    search = Search()
+    path, found, stack = search.DFS(t, ['n6'], False, 'ASC')
+    for row in stack:
+       print(row)
