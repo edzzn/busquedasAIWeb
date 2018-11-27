@@ -5,6 +5,7 @@ class Search:
         visited = []
         found = []
         curNode = None
+        depth = 0
 
         queue.insert(0, Inode)
 
@@ -20,7 +21,6 @@ class Search:
 
         while (len(queue) and (len(found) != len(nodeVal))):
             curNode = queue.pop(0)
-
             visited.append(curNode)
 
             if (sort == 'ASC'):
@@ -226,6 +226,45 @@ class Search:
 
     # Gradient Search
     def GS(self, Inode, showStack=False, sort='ASC'):
+        stack = []
+        queue_dict = {}
+        visited = []
+        found = []
+
+        queue_dict[Inode] = Inode.value
+
+        stack.extend([
+            f"Searching... in {Inode.name}",
+            f"Queue \t\t Current",
+            f"{Inode.name}"
+        ])
+
+        if (showStack):
+            for row in stack:
+                print(row)    
+
+        while len(queue_dict):
+            curNode = min(queue_dict, key=queue_dict.get)  # 'min' or 'max'
+            queue_dict = {}
+            visited.append(curNode)
+            for child in curNode.children:
+                if child not in visited:
+                    queue_dict[child] = child.value
+
+            if (curNode.value == 0):
+                found.append(curNode.name)
+                if (showStack):
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name} *")
+            else:
+                if (showStack):
+                    print(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+                stack.append(f"{list(map(lambda node: node.name + '(' +str(queue_dict[node]) + ')', queue_dict))} \t\t {curNode.name}")
+
+        return (visited, found, stack)
+
+    # Gradient Search
+    def Greedy(self, Inode, showStack=False, sort='ASC'):
         stack = []
         queue_dict = {}
         visited = []

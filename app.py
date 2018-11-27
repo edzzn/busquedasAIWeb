@@ -17,6 +17,8 @@ ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 # app = Flask(__name__)}
 app = Flask(__name__, static_folder='uploads', static_url_path='')
 
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 
 @app.route("/")
 def index():
@@ -32,9 +34,12 @@ def result():
 
     filename=request.args.get('filename')
     
-    random = request.form.get('random')
-    num_nodes = request.form.get('num-nodes')
-    random_probability = request.form.get('random-probability')
+    data_origin = request.args.get('data_origin')
+    print(data_origin + '\n\n')
+    num_nodes = request.args.get('num_nodes')
+    random_probability = request.args.get('random_probability')
+    identificador=request.args.get('identificador')
+    
     algorithm['DFS'] = request.args.get('DFS')
     algorithm['BFS'] = request.args.get('BFS')
     algorithm['BDS'] = request.args.get('BDS')
@@ -43,9 +48,8 @@ def result():
     algorithm['GS'] = request.args.get('GS')
     algorithm['BestFS'] = request.args.get('BestFS')
     algorithm['A'] = request.args.get('A')
-    # algorithm['greedy'] = request.args.get('greedy')
-    timeit = request.args.get('timeit')
-    render_graph = request.args.get('render-graph')
+    
+    algorithm['greedy'] = request.args.get('greedy')
     complexity = request.args.get('complexity')
 
     def call_search(name, Inode, nodeVal):
@@ -57,25 +61,60 @@ def result():
             'UCS': getattr(search, 'UCS'),
             'GS': getattr(search, 'GS'),
             'BestFS': getattr(search, 'BestFS'),
-            'A': getattr(search, 'A')
+            'A': getattr(search, 'A'),
+            'greedy': getattr(search, 'Greedy')
+            
         }
         # print(f"search: {name}, nodeVal: {nodeVal}")
         func = switcher.get(name, lambda: "nothing")
         return func(Inode, nodeVal)
 
-    if random:
+    def get_complexity(name, b, d):
+        d = int(d)
+        b = int(b)
+        switcher = {
+            'DFS': (b^d, b^d),
+            'BFS': (b^d, b^d),
+            'BDS': (b^int(d/2), b^int(d/2)),
+            'IDS': (b^d, b*d),
+            'UCS': (b^d, b^d),
+            'GS': (b^d, b^d),
+            'BestFS': (b^d, b^d),
+            'A': (b^d, b^d),
+            'greedy': (b^d, b^d)
+        }
+        # print(f"search: {name}, nodeVal: {nodeVal}")
+        complexi = switcher.get(name, lambda: "nothing")
+        return complexi
+
+    if data_origin == 'random':
         graph.gen_random(int(num_nodes), float(random_probability))
+    elif data_origin == 'db':
+        graph.load_graph()
     else:
         upload_location = os.path.join(app.root_path, 'uploads', filename)
         graph.read_file(upload_location)
-        # print(graph.nodes)
-        # print(graph.edges)
+        
+        # for node in graph.nodes:
+        #     graph.conn.insert_node(node)
+        # for node in graph.nodes:
+        #     for child in node.children:
+        #         graph.conn.insert_edge(node, child)
+                
+        # graph.load_graph()
+    # print(graph.nodes)
+    # print(graph.edges)
+    print(f"Hijos Promedio: {graph.average_children()}")
     
-    init_node = graph.get_node('a')
+    
+    init_node = graph.get_node('N1')
     # print(init_node)
-    nodeVal= 'h'
+    nodeVal= 'N8'
 
+    # print(f"maxDepth: {graph.maxDepth(init_node)}")
     algorithm = {k : v for k,v in algorithm.items() if v == 'on'}
+
+    average_children = graph.average_children()
 
     for key in algorithm:
         # print(f"{key}: {algorithm[key]}")
@@ -85,12 +124,12 @@ def result():
             start_time = time.time()
             path, found, stack = call_search(key, init_node, currNodeVal)
             time_elapsed = (time.time() - start_time)
-            algorithm_results[key] = [path, found, stack, time_elapsed]
+            algorithm_results[key] = [path, found, stack, time_elapsed, get_complexity(key, len(path), average_children)]
         else:
             start_time = time.time()
             path, found, stack = call_search(key, init_node, [nodeVal])
             time_elapsed = (time.time() - start_time)
-            algorithm_results[key] = [path, found, stack, time_elapsed]
+            algorithm_results[key] = [path, found, stack, time_elapsed, get_complexity(key, len(path), average_children)]
     
     # Dibujar
     G=nx.Graph()
@@ -113,9 +152,9 @@ def result():
 
     resource_path = os.path.join(app.root_path, 'uploads')
 
-    plt.savefig(resource_path + '/' + filename+".png")
+    plt.savefig(resource_path + '/' + identificador+".png")
 
-    return render_template('result.html', title="Resultado de busquedas", filename=filename, algorithm_results=algorithm_results)
+    return render_template('result.html', title="Resultado de busquedas", filename=filename, algorithm_results=algorithm_results, identificador=identificador)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -126,12 +165,8 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'inputFile' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['inputFile']
-        # args = request.args.get('filename')
-        random = request.form.get('random')
+
+        data_origin = request.form.get('data_origin')
         num_nodes = request.form.get('num-nodes')
         random_probability = request.form.get('random-probability')
         DFS = request.form.get('DFS')
@@ -142,11 +177,32 @@ def upload_file():
         GS = request.form.get('GS')
         BestFS = request.form.get('BestFS')
         A = request.form.get('A')
-        # greedy = request.form.get('greedy')
-        timeit = request.form.get('timeit')
-        render_graph = request.form.get('render-graph')
-        complexity = request.form.get('complexity')
-        # print(f"DFS: {DFS}, BFS: {BFS}")
+        greedy = request.form.get('greedy')
+
+        identificador = str(uuid.uuid4().hex)
+
+        if 'inputFile' not in request.files:
+            
+            if data_origin != 'file':
+                return redirect(url_for('result',
+                                                filename='',
+                                                DFS = DFS,
+                                                BFS = BFS,
+                                                BDS = BDS,
+                                                IDS = IDS,
+                                                UCS = UCS,
+                                                GS = GS,
+                                                BestFS = BestFS,
+                                                A = A,
+                                                greedy = greedy,
+                                                data_origin = data_origin,
+                                                num_nodes = num_nodes,
+                                                random_probability = random_probability,
+                                                identificador = identificador
+                ))
+            else:
+                return redirect(url_for('index'))
+        file = request.files['inputFile']
 
         # if user does not select file, browser also
         # submit an empty part without filename
@@ -155,7 +211,7 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = str(uuid.uuid4().hex) + '-' + secure_filename(file.filename)
+            filename = identificador
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             return redirect(url_for('result',
                                     filename=filename,
@@ -167,12 +223,13 @@ def upload_file():
                                     GS = GS,
                                     BestFS = BestFS,
                                     A = A,
-                                    # greedy = greedy,
-                                    timeit = timeit,
-                                    render_graph = render_graph,
-                                    complexity = complexity,
-                                    random = random,
+                                    greedy = greedy,
+                                    data_origin = data_origin,
                                     num_nodes = num_nodes,
-                                    random_probability = random_probability
+                                    random_probability = random_probability,
+                                    identificador= identificador
                                     ))
 
+
+app.debug = True
+app.run()

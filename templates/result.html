@@ -7,7 +7,7 @@
 <h2>Resultado de la Busqueda.</h2>
 <h4>Archivo: {{ filename }}</h4>
 
-<img src="{{ filename }}.png">
+<img src="{{ identificador }}.png">
 
 <table class="table table-bordered mt-5" id="tabla-proximas-citas" width="100%" cellspacing="0">
     <thead>
@@ -16,6 +16,8 @@
             <th>Camino</th>
             <th>Stack</th>
             <th>Encontado</th>
+            <th>Complejidad Espacial</th>
+            <th>Complejidad Temporal</th>
             <th>Tiempo</th>
         </tr>
     </thead>
@@ -32,6 +34,8 @@
                     {% endfor %}
                 </td>
                 <td>{{ algorithm_results[algorithm][1] }}</td>
+                <td>{{ algorithm_results[algorithm][-1][0] }}</td>
+                <td>{{ algorithm_results[algorithm][-1][1] }}</td>
                 <td>{{ algorithm_results[algorithm][3] }}</td>
         </tr>
         {% endfor %}

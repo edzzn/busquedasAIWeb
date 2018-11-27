@@ -21,6 +21,12 @@ class Graph:
             if node.name == name:
                 return node
         return None
+    
+    def load_graph(self):
+        self.nodes = self.conn.get_nodes()
+        # nodes =  list(map(lambda node: node.name, self.nodes))
+        self.edges = self.conn.get_edges(self.nodes)
+        print(self.edges)
 
     def gen_random(self, n, p=0.5):
         self.nodes = [ nd.Node("N"+str(i)) for i in range(n)]
@@ -78,6 +84,28 @@ class Graph:
                 self.edges.append([currNode, currEdge, edgeWeight])
                 currNode.addChildren([currEdge], [edgeWeight])
                 # print(currNode.children)
+
+    def average_children(self):
+        children = []
+        for node in self.nodes:
+            children.extend(node.children)
+        return int(len(children) / len(self.nodes))
+
+    # def maxDepth(self, node): 
+    #     if node is None: 
+    #         return 0 ;  
+    
+    #     else : 
+    #         depths = {}
+    #         visited = []
+    #         for node in self.nodes:
+    #             if node not in visited:
+    #                 visited.append(node)
+    #                 depths[node] = self.maxDepth(node)
+
+    #         max_node = max(depths, key=depths.get)
+    #         # Use the larger one 
+    #         return max_node+1
 
 if __name__ == "__main__":
     grafo = Graph()

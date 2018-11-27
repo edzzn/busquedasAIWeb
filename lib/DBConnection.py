@@ -115,29 +115,42 @@ class Connection:
         try:
             conn = psycopg2.connect(host=self.DB_HOST ,database=self.DB_DB , user=self.DB_USER , password=self.DB_PASSWORD)
             cur = conn.cursor()
+            print(f"nodes: {nodes}")
 
             for node in nodes:
+                # print(f"node: {node}")
                 cur.execute(f"SELECT node_id FROM nodes WHERE node_name = '{node.name}'")
                 parent_id = cur.fetchone()[0]
+                # print(f"parent_id: {parent_id}")
 
                 cur.execute(f"SELECT child_id FROM edges WHERE parent_id = '{parent_id}'")
 
                 rows = cur.fetchall()
+                # print(f"rows: {rows}")
 
                 for row in rows:
                     cur.execute(f"SELECT node_name FROM nodes WHERE node_id = '{row[0]}'")
                     child_name = cur.fetchone()[0]
+                    print(f"child_name: {child_name}")
                     child_node = list(filter(lambda child: child.name == child_name, nodes))
-                    node.addChildren(child_node[0])
-                    edges.append( (node, child_node[0]) )
+                    print(f"child_node: {child_node}")
 
+                    node.addChildren([child_node[0]])
+                    # print(f"node: {node}")
+
+                    edges.append( (node, child_node[0]) )
+                # print(f"edges: {edges}")
+                
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-        return nodes 
+        # print(nodes)
+        # print(edges)
+        
+        return nodes, edges
 
     def insert_edge(self, parent_node, child_node):
         sql =  """INSERT INTO edges(parent_id, child_id)

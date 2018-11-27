@@ -17,15 +17,27 @@
       </div>
     </div>
   </div>
-
+<div class="form-group row">
+  <div class="col-sm-2">Origend de datos</div>
+  <div class="mr-3">
+    <input type="radio" id="file" name="data_origin" value="file"
+           checked>
+    <label for="file">Archivo</label>
+  </div>
+  
+  <div class="mr-3">
+    <input type="radio" id="random" name="data_origin" value="random">
+    <label for="random">Aleatorio</label>
+  </div>
+  <div class="mr-3">
+    <input type="radio" id="db" name="data_origin" value="db">
+    <label for="db">Base de datos</label>
+  </div>
+</div>
   
 <div class="form-group row">
   <div class="col-sm-2">Grafo aleatorio</div>
   <div class="col-10">
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="random" name="random">
-        <label class="form-check-label" for="random">Random?</label><small> (Generar un grafo aleatorio)</small>
-    </div>
     <label class="form-check-label" for="num-nodes">Número de nodos</label>
     <input class="form-control" type="number" value="10" id="num-nodes" name="num-nodes">
     <label class="form-check-label" for="num-nodes">Probabilidad de arista</label><small> (Probabilidad que exista una arista entre dos nodos, defecto= 0.5)</small>
@@ -72,28 +84,9 @@
         <input class="form-check-input" type="checkbox" id="A" name="A">
         <label class="form-check-label" for="A">A*</label> <small> (A star)</small>
       </div>
-      <!-- <div class="form-check">
+      <div class="form-check">
         <input class="form-check-input" type="checkbox" id="greedy" name="greedy">
         <label class="form-check-label" for="greedy">Greedy</label>
-      </div> -->
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-sm-2">Opciones</div>
-    <div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="timeit" name="timeit">
-        <label class="form-check-label" for="timeit">Mostrar tiempos</label><small> (Generar una tabla comparativa)</small>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="render-graph" name="render-graph">
-        <label class="form-check-label" for="render-graph">Mostrar gráfica</label><small> (Genera una grafica si el grafo
-          tiene 100 o menos nodos)</small>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="complexity" name="complexity">
-        <label class="form-check-label" for="complexity">Mostrar gráfica</label><small> (Genera una grafica si el grafo
-          tiene 100 o menos nodos)</small>
       </div>
     </div>
   </div>
