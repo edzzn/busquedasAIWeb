@@ -15,3 +15,6 @@ six==1.11.0
 Werkzeug==0.14.1
 wincertstore==0.2
 wrapt==1.10.11
+numpy=1.15.4=py37ha559c80_0
+numpy-base=1.15.4=py37h8128ebf_0
+networkx=2.2=py37_1
