@@ -53,6 +53,8 @@ class Search:
         curNode = None
 
         queue.append(Inode)
+        print(Inode)
+        print(Inode.children)
 
         stack.extend([
             f"Searching... {nodeVal} in {Inode.name}",

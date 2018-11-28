@@ -109,7 +109,9 @@ def result():
     
     
     init_node = graph.get_node('N1')
-    # print(init_node)
+    print('init_node')
+    print(init_node)
+    print(init_node.children)
     nodeVal= 'N8'
 
     # print(f"maxDepth: {graph.maxDepth(init_node)}")
