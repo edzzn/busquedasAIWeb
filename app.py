@@ -90,6 +90,7 @@ def result():
 
     if data_origin == 'random':
         graph.gen_random(int(num_nodes), float(random_probability))
+        # graph.save()
     elif data_origin == 'db':
         graph.load_graph()
     else:

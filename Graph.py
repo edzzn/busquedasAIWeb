@@ -25,11 +25,16 @@ class Graph:
     def load_graph(self):
         self.nodes = self.conn.get_nodes()
         # nodes =  list(map(lambda node: node.name, self.nodes))
+        print(f"nodes: {self.nodes}")
         self.edges = self.conn.get_edges(self.nodes)
         print(self.edges)
 
     def gen_random(self, n, p=0.5):
-        self.nodes = [ nd.Node("N"+str(i)) for i in range(n)]
+        self.nodes = [ nd.Node(
+                        "N"+str(i),
+                         int((100 - 1) * np.random.random_sample() + 1)
+                        ) for i in range(n-1)]
+        self.nodes.append(nd.Node("N" + str(n-1), 0))
         for node_i in self.nodes:
             for node_j in self.nodes:
                 if np.random.random() <= p and node_i is not node_j:
