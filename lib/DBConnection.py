@@ -13,6 +13,7 @@ class Connection:
             (
                 node_id SERIAL PRIMARY KEY,
                 node_name VARCHAR(255) NOT NULL,
+                node_peso INTEGER,        
                 CONSTRAINT "Name_unique" UNIQUE (node_name)
             )
             WITH (
@@ -24,7 +25,8 @@ class Connection:
             (
                 edge_id SERIAL PRIMARY KEY,
                 parent_id INTEGER NOT NULL,
-                child_id INTEGER NOT NULL,        
+                child_id INTEGER NOT NULL, 
+                edge_peso INTEGER,        
                 CONSTRAINT parent_child_unique UNIQUE (parent_id, child_id),
                 CONSTRAINT "child_FK" FOREIGN KEY (child_id)
                     REFERENCES nodes (node_id) MATCH SIMPLE
@@ -62,18 +64,19 @@ class Connection:
                 conn.close()
 
     def insert_node(self, node):
-        sql =  """INSERT INTO nodes(node_name)
-                 VALUES(%s) RETURNING node_id;"""
+        sql =  """INSERT INTO nodes(node_name, node_peso)
+                 VALUES(%s, %s) RETURNING node_id;"""
 
         conn = None
         node_id = None
         node_name = node.name
+        node_peso = node.value
         try:
             conn = psycopg2.connect(host=self.DB_HOST ,database=self.DB_DB , user=self.DB_USER , password=self.DB_PASSWORD)
 
             cur = conn.cursor()
 
-            cur.execute(sql, (node_name,))
+            cur.execute(sql, (node_name, node_peso,))
 
             # get the generated node id
             node_id = cur.fetchone()[0]
@@ -95,11 +98,11 @@ class Connection:
         try:
             conn = psycopg2.connect(host=self.DB_HOST ,database=self.DB_DB , user=self.DB_USER , password=self.DB_PASSWORD)
             cur = conn.cursor()
-            cur.execute("SELECT node_name FROM nodes ORDER BY node_name")
+            cur.execute("SELECT node_name, node_peso FROM nodes ORDER BY node_name")
             rows = cur.fetchall()
 
             for row in rows:
-                nodes.append(Node.Node(row[0]))
+                nodes.append(Node.Node(row[0][0], row[0][1]))
 
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -153,13 +156,14 @@ class Connection:
         return nodes, edges
 
     def insert_edge(self, parent_node, child_node):
-        sql =  """INSERT INTO edges(parent_id, child_id)
-                 VALUES(%s, %s) RETURNING edge_id;"""
+        sql =  """INSERT INTO edges(parent_id, child_id, edge_peso)
+                 VALUES(%s, %s, %s) RETURNING edge_id;"""
 
         conn = None
         edge_id = None
         parent_id = None
         child_id = None
+        edge_peso = parent_node.pesos[child_node]
         parent_name = parent_node.name
         child_name = child_node.name
         try:
@@ -172,7 +176,7 @@ class Connection:
             cur.execute(f"SELECT node_id FROM nodes WHERE node_name = '{child_name}'")
             child_id = cur.fetchone()[0]
 
-            cur.execute(sql, (parent_id, child_id))
+            cur.execute(sql, (parent_id, child_id, edge_peso))
 
             # get the generated node id
             edge_id = cur.fetchone()[0]

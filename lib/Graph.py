@@ -60,17 +60,14 @@ class Graph:
                     else:
                         edgeName = str(node.split(":")[0])
                         edgeWeight = int(node.split(":")[1])
-                        edgeHeuristic = int(node.split(":")[2])
                         # print(edgeName)
-                        edges[edgeName] = (currNonde.name, edgeWeight, edgeHeuristic)
+                        edges[edgeName] = (currNonde.name, edgeWeight)
 
         # print("\n")
         for edge in edges:
             edgeName = edge
             currNodeName = edges[edge][0]
             edgeWeight = edges[edge][1]
-            
-            edgeHeuristic = edges[edge][2]
             
             # Weight should be != 0
             if edgeWeight > 0:
@@ -90,22 +87,6 @@ class Graph:
         for node in self.nodes:
             children.extend(node.children)
         return int(len(children) / len(self.nodes))
-
-    # def maxDepth(self, node): 
-    #     if node is None: 
-    #         return 0 ;  
-    
-    #     else : 
-    #         depths = {}
-    #         visited = []
-    #         for node in self.nodes:
-    #             if node not in visited:
-    #                 visited.append(node)
-    #                 depths[node] = self.maxDepth(node)
-
-    #         max_node = max(depths, key=depths.get)
-    #         # Use the larger one 
-    #         return max_node+1
 
 if __name__ == "__main__":
     grafo = Graph()

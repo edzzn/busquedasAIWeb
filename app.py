@@ -69,16 +69,17 @@ def result():
         func = switcher.get(name, lambda: "nothing")
         return func(Inode, nodeVal)
 
-    def get_complexity(name, b, d):
+    def get_complexity(name, b, d, m):
         d = int(d)
         b = int(b)
+        b = int(m)
         switcher = {
             'DFS': (b^d, b^d),
-            'BFS': (b^d, b^d),
+            'BFS': (b*m, b^d),
             'BDS': (b^int(d/2), b^int(d/2)),
-            'IDS': (b^d, b*d),
+            'IDS': (b*d, b^d),
             'UCS': (b^d, b^d),
-            'GS': (b^d, b^d),
+            'GS': (1, b*d),
             'BestFS': (b^d, b^d),
             'A': (b^d, b^d),
             'greedy': (b^d, b^d)
@@ -104,7 +105,7 @@ def result():
         # graph.load_graph()
     # print(graph.nodes)
     # print(graph.edges)
-    print(f"Hijos Promedio: {graph.average_children()}")
+    # print(f"Hijos Promedio: {graph.average_children()}")
     
     
     init_node = graph.get_node('N1')
@@ -115,6 +116,7 @@ def result():
     algorithm = {k : v for k,v in algorithm.items() if v == 'on'}
 
     average_children = graph.average_children()
+    max_depth = init_node.maxDepth()
 
     for key in algorithm:
         # print(f"{key}: {algorithm[key]}")
@@ -124,12 +126,12 @@ def result():
             start_time = time.time()
             path, found, stack = call_search(key, init_node, currNodeVal)
             time_elapsed = (time.time() - start_time)
-            algorithm_results[key] = [path, found, stack, time_elapsed, get_complexity(key, len(path), average_children)]
+            algorithm_results[key] = [path, found, stack, time_elapsed, get_complexity(key, len(path), average_children, max_depth)]
         else:
             start_time = time.time()
             path, found, stack = call_search(key, init_node, [nodeVal])
             time_elapsed = (time.time() - start_time)
-            algorithm_results[key] = [path, found, stack, time_elapsed, get_complexity(key, len(path), average_children)]
+            algorithm_results[key] = [path, found, stack, time_elapsed, get_complexity(key, len(path), average_children, max_depth)]
     
     # Dibujar
     G=nx.Graph()

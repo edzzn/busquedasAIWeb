@@ -43,3 +43,22 @@ class Node:
 
     def remove(self, child):
         self.children.remove(child)
+
+    def maxDepth(self):
+        currNodes = [self]
+        max_depth = 0
+        currChildren = []
+        visited = []
+
+        while currNodes:
+            for node in currNodes:
+                for child in node.children:
+                    if child not in visited:
+                        visited.append(child)
+                        currChildren.append(child)
+                node.children = []
+            max_depth += 1
+            currNodes = currChildren[:]
+            currChildren = []
+
+        return max_depth
