@@ -1,6 +1,6 @@
 import numpy as np
-from lib import DBConnection as DB
-from lib import Node as nd
+import DBConnection as DB
+import Node as nd
 
 class Graph:
     def __init__(self, nodes=[], edges=[]):

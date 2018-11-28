@@ -3,9 +3,9 @@ from flask import Flask
 from flask import render_template
 from flask import jsonify, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
-from lib import Search
+import Search
 import uuid
-from lib import Graph
+import Graph
 import time
 import matplotlib.pyplot as plt
 import networkx as nx
