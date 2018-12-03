@@ -25,9 +25,17 @@ class Graph:
     def load_graph(self):
         self.nodes = self.conn.get_nodes()
         # nodes =  list(map(lambda node: node.name, self.nodes))
-        print(f"nodes: {self.nodes}")
+        # print(f"nodes: {self.nodes}")
         self.edges = self.conn.get_edges(self.nodes)
-        print(self.edges)
+        # print(f"Edges:: {self.edges}")
+
+        # for edge1 in self.edges:
+        # print(f"nodes:: {self.edges[0]}")
+        # print(f"edges:: {self.edges[1]}")
+        # for edge in self.edges:
+        #     print(f"Edge: {edge[0]} -> {edge[1]} ")
+            # self.edges.append([currNode, currEdge, edgeWeight])
+            # currNode.addChildren([currEdge], [edgeWeight])
 
     def gen_random(self, n, p=0.5):
         self.nodes = [ nd.Node(

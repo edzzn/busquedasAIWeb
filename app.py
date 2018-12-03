@@ -81,7 +81,7 @@ def result():
             'UCS': (b^d, b^d),
             'GS': (1, b*d),
             'BestFS': (b^d, b^d),
-            'A': (b^d, b^d),
+            'A': (b^d, b^d  ),
             'greedy': (b^d, b^d)
         }
         # print(f"search: {name}, nodeVal: {nodeVal}")
@@ -138,8 +138,9 @@ def result():
     
     # Dibujar
     G=nx.Graph()
-    print(f"Edges: {graph.edges}")
+    # print(f"Edges: {graph.edges}")
     for edge in graph.edges:
+        # print(f"Edge: {edge}")
         G.add_edge(edge[0].name, edge[1].name, weight=edge[2])
     
     # G.add_nodes_from(graph.nodes)
