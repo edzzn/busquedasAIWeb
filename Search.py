@@ -30,7 +30,8 @@ class Search:
                 curNode.children.sort(key=lambda x: x.name, reverse=False)
 
             for child in curNode.children:
-                if child not in visited:
+                # if child not in visited:
+                if child not in visited and child not in queue:
                     queue.insert(0, child)
 
             if (curNode.name in nodeVal):
@@ -78,7 +79,8 @@ class Search:
                 curNode.children.sort(key=lambda x: x.name, reverse=True)
 
             for child in curNode.children:
-                if child not in visited:
+                # if child not in visited:
+                if child not in visited and child not in queue:
                     queue.insert(0, child)
 
             if (curNode.name in nodeVal):
@@ -142,7 +144,8 @@ class Search:
                     node.children.sort(key=lambda x: x.name, reverse=True)
 
                 for child in node.children:
-                    if child not in visited:
+                    # if child not in visited:
+                    if child not in visited and child not in queue:
                         queue.append(child)
             # print(f"Visited: {visited}")
             # print(f"Queue: {queue}")
@@ -207,6 +210,7 @@ class Search:
 
             visited.append(curNode)
             for child in curNode.children:
+                # if child not in visited:
                 if child not in visited:
                     queue_dict[child] = curNode.pesos[child] + \
                         queue_dict[curNode]
@@ -250,6 +254,7 @@ class Search:
             queue_dict = {}
             visited.append(curNode)
             for child in curNode.children:
+                # if child not in visited:
                 if child not in visited:
                     queue_dict[child] = child.value
 
@@ -289,6 +294,7 @@ class Search:
             queue_dict = {}
             visited.append(curNode)
             for child in curNode.children:
+                # if child not in visited:
                 if child not in visited:
                     queue_dict[child] = child.value
 
@@ -327,6 +333,7 @@ class Search:
             visited.append(curNode)
             # print(f"curNode.children: {curNode.children}")
             for child in curNode.children:
+                # if child not in visited:
                 if child not in visited:
                     queue_dict[child] = child.value
 
@@ -368,6 +375,7 @@ class Search:
             visited.append(curNode)
             # print(f"curNode.children: {curNode.children}")
             for child in curNode.children:
+                # if child not in visited:
                 if child not in visited:
                     # queue_dict[child] = child.value + curNode.pesos[child] + queue_dict[curNode]
                     queue_dict[child] = child.value + curNode.pesos[child]
